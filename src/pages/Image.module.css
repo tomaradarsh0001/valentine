@@ -1,0 +1,663 @@
+/* Countdown Screen */
+.countdownScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    transition: opacity 0.5s ease;
+}
+
+.countdownScreen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.countdownTitle {
+    color: #fff;
+    font-size: clamp(24px, 6vw, 48px);
+    margin-bottom: 30px;
+    text-align: center;
+    font-family: "Orelo-sw-db", serif;
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.7);
+}
+
+.smashButton {
+    background: linear-gradient(135deg, #ff6b9d, #ff8fab);
+    border: none;
+    border-radius: 50%;
+    width: clamp(150px, 40vw, 250px);
+    height: clamp(150px, 40vw, 250px);
+    font-size: clamp(20px, 5vw, 32px);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+    font-family: "Orelo-sw-db", serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.smashButton:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 30px rgba(255, 105, 180, 0.8);
+}
+
+.countdownNumber {
+    font-size: clamp(40px, 10vw, 80px);
+    font-weight: bold;
+    margin-bottom: 10px;
+    transition: all 0.1s ease;
+}
+
+.smashText {
+    font-size: clamp(16px, 4vw, 24px);
+}
+
+.countdownProgress {
+    width: 80%;
+    max-width: 400px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    margin-top: 30px;
+    overflow: hidden;
+}
+
+.countdownProgressBar {
+    height: 100%;
+    background: linear-gradient(90deg, #ff6b9d, #ff8fab);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.countdownHearts {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.countdownHeart {
+    position: absolute;
+    font-size: 20px;
+    opacity: 0;
+    animation: heartFloat 1s ease-out forwards;
+}
+
+@keyframes heartFloat {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-100px) scale(1.5);
+    }
+}
+
+/* Original Styles */
+.body {
+    overflow: hidden;
+    font-family: "Roboto", serif;
+    background: linear-gradient(135deg, #ffd1dc, #ffb6c1, #ffc0cb, #ffd1dc);
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+/* Background elements */
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.flower {
+    position: absolute;
+    opacity: 0.3;
+    font-size: 24px;
+    animation: float 15s infinite linear;
+}
+
+.heart {
+    position: absolute;
+    opacity: 0.2;
+    font-size: 20px;
+    animation: float 20s infinite linear;
+}
+
+.sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    animation: sparkle 3s infinite;
+}
+
+.glitter {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    animation: glitter 4s infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+    }
+}
+
+@keyframes sparkle {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes glitter {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(-10px) rotate(180deg);
+    }
+}
+
+.colorTransition {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(255, 182, 193, 0.3), rgba(255, 209, 220, 0.3), rgba(255, 192, 203, 0.3));
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    z-index: -1;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.carousel {
+    position: relative;
+    z-index: 1;
+    height: 100vh;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.carouselItem {
+    --items: 11;
+    --width: clamp(250px, 30vw, 300px);
+    --height: clamp(300px, 40vw, 400px);
+    --x: calc(var(--active) * 800%);
+    --y: calc(var(--active) * 200%);
+    --rot: calc(var(--active) * 120deg);
+    --opacity: calc(var(--zIndex) / var(--items) * 3 - 2);
+    overflow: hidden;
+    position: absolute;
+    z-index: var(--zIndex);
+    width: var(--width);
+    height: var(--height);
+    margin: calc(var(--height) * -0.5) 0 0 calc(var(--width) * -0.5);
+    border-radius: 10px;
+    top: 50%;
+    left: 50%;
+    user-select: none;
+    transform-origin: 0% 100%;
+    box-shadow: 0 10px 50px 10px rgba(0, 0, 0, 0.5);
+    background: black;
+    pointer-events: all;
+    transform: translate(var(--x), var(--y)) rotate(var(--rot));
+    transition: transform 0.8s cubic-bezier(0, 0.02, 0, 1);
+}
+
+.carouselBox {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.8s cubic-bezier(0, 0.02, 0, 1);
+    opacity: var(--opacity);
+    font-family: "Orelo-sw-db", serif;
+    cursor: pointer;
+}
+
+.carouselBox:before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5));
+}
+
+.title {
+    position: absolute;
+    z-index: 1;
+    color: #fff;
+    bottom: 20px;
+    left: 20px;
+    transition: opacity 0.8s cubic-bezier(0, 0.02, 0, 1);
+    font-size: clamp(20px, 3vw, 30px);
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.num {
+    position: absolute;
+    z-index: 1;
+    color: #fff;
+    top: 10px;
+    left: 20px;
+    transition: opacity 0.8s cubic-bezier(0, 0.02, 0, 1);
+    font-size: clamp(20px, 10vw, 80px);
+}
+
+.carouselItem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+/* Last item special styling */
+.carouselItem:last-child .carouselBox {
+    background: linear-gradient(135deg, #ff6b9d, #ff8fab);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.carouselItem:last-child .carouselBox:before {
+    background: none;
+}
+
+.carouselItem:last-child .title {
+    position: static;
+    margin-bottom: 20px;
+    font-size: clamp(24px, 4vw, 36px);
+    color: white;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.carouselItem:last-child .num {
+    display: none;
+}
+
+.clickMeBtn {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50px;
+    padding: 12px 30px;
+    font-size: clamp(18px, 3vw, 24px);
+    color: #ff6b9d;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    font-family: "Orelo-sw-db", serif;
+}
+
+.clickMeBtn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: white;
+}
+
+.floatingHearts {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    animation: floatHearts 3s infinite ease-in-out;
+}
+
+@keyframes floatHearts {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.layout {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.layout:before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 90px;
+    width: 10px;
+    height: 100%;
+    border: 1px solid #fff;
+    border-top: none;
+    border-bottom: none;
+    opacity: 0.15;
+}
+
+.layout .box {
+    position: absolute;
+    bottom: 0;
+    left: 30px;
+    color: #fff;
+    transform-origin: 0% 10%;
+    transform: rotate(-90deg);
+    font-size: 9px;
+    line-height: 1.4;
+    text-transform: uppercase;
+    opacity: 0.4;
+}
+
+.logo {
+    position: absolute;
+    z-index: 2;
+    top: 28px;
+    right: 28px;
+    width: 30px;
+    height: 30px;
+    background: #fff;
+    border-radius: 50%;
+    opacity: 0.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Orelo-sw-db", serif;
+    pointer-events: all;
+    color: black;
+    text-decoration: none;
+    font-size: 20px;
+    overflow: hidden;
+    padding-bottom: 0.1em;
+}
+
+.social {
+    position: absolute;
+    z-index: 10;
+    bottom: 20px;
+    right: 25px;
+    color: #fff;
+    opacity: 0.4;
+}
+
+.social a {
+    display: inline-block;
+    margin-left: 3px;
+}
+
+.social svg {
+    --fill: #fff;
+    width: 35px;
+    height: 35px;
+}
+
+.cursor {
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    --size: 40px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin: calc(var(--size) * -0.5) 0 0 calc(var(--size) * -0.5);
+    transition: transform 0.85s cubic-bezier(0, 0.02, 0, 1);
+    display: none;
+    pointer-events: none;
+}
+
+@media (pointer: fine) {
+    .cursor {
+        display: block;
+    }
+}
+
+.cursor2 {
+    --size: 2px;
+    transition-duration: 0.7s;
+}
+
+/* Modal Styles */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.modalOverlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modalContent {
+    background: linear-gradient(135deg, #ffb6c1, #ffd1dc);
+    width: 90%;
+    max-width: 500px;
+    border-radius: 20px;
+    padding: 25px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transform: scale(0.8);
+    transition: transform 0.4s ease;
+    border: 2px solid #ff69b4;
+    overflow: hidden;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modalOverlay.active .modalContent {
+    transform: scale(1);
+}
+
+.modalClose {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #ff69b4;
+    transition: transform 0.3s ease;
+    z-index: 10;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modalClose:hover {
+    transform: scale(1.2);
+}
+
+.modalTitle {
+    text-align: center;
+    color: #d63384;
+    font-size: clamp(24px, 5vw, 32px);
+    margin-bottom: 20px;
+    font-family: "Orelo-sw-db", serif;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    padding-top: 10px;
+}
+
+.modalText {
+    color: #8b2252;
+    font-size: clamp(16px, 4vw, 18px);
+    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 25px;
+    font-family: "Roboto", serif;
+}
+
+.modalHearts {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.modalHeart {
+    font-size: clamp(24px, 5vw, 30px);
+    animation: heartbeat 1.5s infinite;
+}
+
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.modalDecoration {
+    position: absolute;
+    font-size: clamp(16px, 4vw, 20px);
+    opacity: 0.3;
+}
+
+.decorationTopLeft {
+    top: 10px;
+    left: 10px;
+}
+
+.decorationTopRight {
+    top: 10px;
+    right: 10px;
+}
+
+.decorationBottomLeft {
+    bottom: 10px;
+    left: 10px;
+}
+
+.decorationBottomRight {
+    bottom: 10px;
+    right: 10px;
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 768px) {
+    .modalContent {
+        padding: 20px 15px;
+        border-radius: 15px;
+    }
+
+    .modalClose {
+        top: 10px;
+        right: 15px;
+    }
+
+    .carouselItem:last-child .title {
+        font-size: clamp(20px, 6vw, 28px);
+        margin-bottom: 15px;
+    }
+
+    .clickMeBtn {
+        padding: 10px 25px;
+        font-size: clamp(16px, 4vw, 20px);
+    }
+}
+
+@media (max-width: 480px) {
+    .modalContent {
+        padding: 15px 10px;
+    }
+
+    .modalText {
+        font-size: 16px;
+        line-height: 1.5;
+    }
+
+    .modalHearts {
+        gap: 8px;
+    }
+
+    .modalHeart {
+        font-size: 22px;
+    }
+}
