@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Sparkles, Star, Flower2, Flower } from 'lucide-react';
+import { Heart, Sparkles, Star, Flower2 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function LovePage() {
@@ -30,66 +30,13 @@ export default function LovePage() {
               ease: "linear"
             }}
           >
-            {i % 4 === 0 ? (
+            {i % 3 === 0 ? (
               <Heart className="text-rose-400" size={Math.random() * 25 + 15} fill="currentColor" />
-            ) : i % 4 === 1 ? (
-              <Flower2 className="text-pink-400" size={Math.random() * 30 + 15} />
-            ) : i % 4 === 2 ? (
-              <Flower className="text-rose-500" size={Math.random() * 30 + 15} />
+            ) : i % 3 === 1 ? (
+              <Flower2 className="text-pink-400" size={Math.random() * 25 + 15} />
             ) : (
               <Star className="text-red-400" size={Math.random() * 20 + 10} fill="currentColor" />
             )}
-          </motion.div>
-        ))}
-
-        {[...Array(40)].map((_, i) => (
-          <motion.div
-            key={`glitter-${i}`}
-            className="absolute"
-            initial={{
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
-              opacity: 0,
-              scale: 0
-            }}
-            animate={{
-              opacity: [0, 1, 0],
-              scale: [0, 2.5, 0],
-              rotate: [0, 360]
-            }}
-            transition={{
-              duration: 1.8,
-              repeat: Infinity,
-              delay: Math.random() * 2.5,
-              ease: "easeInOut"
-            }}
-          >
-            <div className="w-1 h-1 bg-yellow-300 rounded-full shadow-[0_0_10px_rgba(253,224,71,0.8)]" />
-          </motion.div>
-        ))}
-
-        {[...Array(25)].map((_, i) => (
-          <motion.div
-            key={`star-glitter-${i}`}
-            className="absolute"
-            initial={{
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
-              opacity: 0
-            }}
-            animate={{
-              opacity: [0, 1, 0.5, 1, 0],
-              scale: [0, 1.5, 1, 1.8, 0],
-              rotate: [0, 180, 360]
-            }}
-            transition={{
-              duration: 2.5,
-              repeat: Infinity,
-              delay: Math.random() * 3,
-              ease: "easeInOut"
-            }}
-          >
-            <Star className="text-yellow-300" size={12} fill="currentColor" />
           </motion.div>
         ))}
       </div>
@@ -270,48 +217,9 @@ export default function LovePage() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
             >
-              {[...Array(60)].map((_, i) => {
-                const angle = (i / 60) * Math.PI * 2;
-                const distance = 150 + Math.random() * 300;
-                return (
-                  <motion.div
-                    key={`firework-${i}`}
-                    className="absolute"
-                    initial={{
-                      x: window.innerWidth / 2,
-                      y: window.innerHeight / 2,
-                      scale: 0,
-                      opacity: 1
-                    }}
-                    animate={{
-                      x: window.innerWidth / 2 + Math.cos(angle) * distance,
-                      y: window.innerHeight / 2 + Math.sin(angle) * distance,
-                      scale: [0, 1.8, 1.2, 0],
-                      opacity: [1, 1, 0.8, 0],
-                      rotate: [0, 360]
-                    }}
-                    transition={{
-                      duration: 2.5,
-                      delay: i * 0.015,
-                      ease: "easeOut"
-                    }}
-                  >
-                    {i % 4 === 0 ? (
-                      <Heart className="text-red-500" size={25} fill="currentColor" />
-                    ) : i % 4 === 1 ? (
-                      <Flower2 className="text-pink-500" size={28} />
-                    ) : i % 4 === 2 ? (
-                      <Star className="text-yellow-400" size={20} fill="currentColor" />
-                    ) : (
-                      <Sparkles className="text-rose-400" size={22} />
-                    )}
-                  </motion.div>
-                );
-              })}
-
-              {[...Array(80)].map((_, i) => (
+              {[...Array(50)].map((_, i) => (
                 <motion.div
-                  key={`sparkle-burst-${i}`}
+                  key={i}
                   className="absolute"
                   initial={{
                     x: window.innerWidth / 2,
@@ -321,43 +229,16 @@ export default function LovePage() {
                   animate={{
                     x: Math.random() * window.innerWidth,
                     y: Math.random() * window.innerHeight,
-                    scale: [0, 2, 0],
-                    opacity: [1, 1, 0],
-                    rotate: [0, 720]
-                  }}
-                  transition={{
-                    duration: 3,
-                    delay: i * 0.03,
-                    ease: "easeOut"
-                  }}
-                >
-                  <div className="w-2 h-2 bg-gradient-to-r from-yellow-300 via-pink-400 to-red-400 rounded-full shadow-[0_0_15px_rgba(255,255,255,0.8)]" />
-                </motion.div>
-              ))}
-
-              {[...Array(40)].map((_, i) => (
-                <motion.div
-                  key={`flower-burst-${i}`}
-                  className="absolute"
-                  initial={{
-                    x: window.innerWidth / 2,
-                    y: window.innerHeight / 2,
-                    scale: 0
-                  }}
-                  animate={{
-                    x: window.innerWidth / 2 + (Math.random() - 0.5) * 600,
-                    y: window.innerHeight / 2 + (Math.random() - 0.5) * 600,
                     scale: [0, 1.5, 1],
-                    opacity: [1, 1, 0],
-                    rotate: [0, Math.random() * 720]
+                    opacity: [1, 1, 0]
                   }}
                   transition={{
-                    duration: 2.8,
-                    delay: i * 0.025,
+                    duration: 2,
+                    delay: i * 0.02,
                     ease: "easeOut"
                   }}
                 >
-                  <Flower className="text-rose-400" size={32} />
+                  <Heart className="text-red-500" size={30} fill="currentColor" />
                 </motion.div>
               ))}
 

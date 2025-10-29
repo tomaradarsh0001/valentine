@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Heart, Sparkles, Star, Flower2, Flower } from 'lucide-react';
+import { Heart, Sparkles, Star } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const messages = [
@@ -52,38 +52,7 @@ export default function HomePage() {
           </motion.div>
         ))}
 
-        {[...Array(25)].map((_, i) => (
-          <motion.div
-            key={`flower-${i}`}
-            className="absolute"
-            initial={{
-              x: Math.random() * window.innerWidth,
-              y: -50,
-              rotate: 0,
-              opacity: 0.6
-            }}
-            animate={{
-              y: window.innerHeight + 50,
-              rotate: [0, 360, 720],
-              opacity: [0.6, 1, 0.6],
-              scale: [0.8, 1.2, 0.8]
-            }}
-            transition={{
-              duration: Math.random() * 12 + 10,
-              repeat: Infinity,
-              delay: Math.random() * 6,
-              ease: "linear"
-            }}
-          >
-            {i % 2 === 0 ? (
-              <Flower2 className="text-pink-400" size={Math.random() * 35 + 20} />
-            ) : (
-              <Flower className="text-rose-400" size={Math.random() * 35 + 20} />
-            )}
-          </motion.div>
-        ))}
-
-        {[...Array(30)].map((_, i) => (
+        {[...Array(15)].map((_, i) => (
           <motion.div
             key={`sparkle-${i}`}
             className="absolute"
@@ -94,44 +63,18 @@ export default function HomePage() {
             }}
             animate={{
               opacity: [0, 1, 0],
-              scale: [0, 2, 0],
+              scale: [0, 1.5, 0],
               rotate: [0, 180, 360]
             }}
             transition={{
-              duration: 2,
+              duration: 3,
               repeat: Infinity,
               delay: Math.random() * 3,
               ease: "easeInOut"
             }}
           >
-            <Sparkles className="text-yellow-300" size={Math.random() * 20 + 10} />
+            <Sparkles className="text-yellow-400" size={20} />
           </motion.div>
-        ))}
-
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={`glitter-${i}`}
-            className="absolute w-2 h-2 bg-gradient-to-br from-yellow-200 via-pink-300 to-purple-300 rounded-full"
-            style={{
-              left: Math.random() * 100 + '%',
-              top: Math.random() * 100 + '%'
-            }}
-            animate={{
-              opacity: [0, 1, 0],
-              scale: [0, 1.5, 0],
-              boxShadow: [
-                '0 0 0px rgba(255, 255, 255, 0)',
-                '0 0 20px rgba(255, 255, 255, 1)',
-                '0 0 0px rgba(255, 255, 255, 0)'
-              ]
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-              ease: "easeInOut"
-            }}
-          />
         ))}
       </div>
 
