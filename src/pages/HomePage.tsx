@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 
 const messages = [
   "Anushka, you are so adorable",
-  "Your smile lights up my world",
-  "You are incredibly beautiful",
-  "My love for you grows every day",
-  "You make everything better",
-  "You are my sunshine",
-  "Your kindness touches my heart",
-  "You are absolutely amazing"
+  "Anushka, Your smile lights up my world",
+  "Anushka, You are incredibly beautiful",
+  "Anushka, My love for you grows every day",
+  "Anushka, You make everything better",
+  "Anushka, You are my sunshine",
+  "Anushka, Your kindness touches my heart",
+  "Anushka, You are absolutely amazing"
 ];
 
 export default function HomePage() {
