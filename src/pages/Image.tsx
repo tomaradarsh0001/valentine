@@ -279,6 +279,7 @@ export default function ImageComponent() {
                     { title: "Forever 🥰", num: "11", image: "/images/11.jpeg" },
                     { title: "Infinite 😍", num: "12", image: "/images/12.jpeg" },
                     { title: "Babbyyy 😍", num: "13", image: "/images/13.jpeg" },
+                    { title: "Loveeee 😍", num: "14", image: "/images/14.jpeg" },
                 ].map((item, index) => (
                     <div key={index} className={styles.carouselItem}>
                         <div className={styles.carouselBox}>
