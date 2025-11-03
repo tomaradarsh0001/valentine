@@ -244,7 +244,7 @@ export default function ImageComponent() {
         <>
             {/* Countdown Screen */}
             <div className={`${styles.countdownScreen} ${!countdownVisible ? styles.hidden : ''}`}>
-                <h1 className={styles.countdownTitle}>Smash Me 100 Times!</h1>
+                <h1 className={styles.countdownTitle}>Tap Me 100 Times!</h1>
                 <button className={styles.smashButton} onClick={handleSmash}>
                     <div className={styles.countdownNumber}>{count}</div>
                     <div className={styles.smashText}>Smash Me!</div>
@@ -276,6 +276,9 @@ export default function ImageComponent() {
                     { title: "I feel very Lucky Everyday 😇", num: "08", image: "/images/8.jpeg" },
                     { title: "and I have Crush on You 🥰", num: "09", image: "/images/9.jpeg" },
                     { title: "I love You ❤️", num: "10", image: "/images/10.jpeg" },
+                    { title: "Forever 🥰", num: "11", image: "/images/11.jpeg" },
+                    { title: "Infinite 😍", num: "12", image: "/images/12.jpeg" },
+                    { title: "Babbyyy 😍", num: "13", image: "/images/13.jpeg" },
                 ].map((item, index) => (
                     <div key={index} className={styles.carouselItem}>
                         <div className={styles.carouselBox}>
