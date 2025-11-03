@@ -67,17 +67,24 @@ export default function VideosPage() {
     const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [isLandscape, setIsLandscape] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
-    // Detect screen orientation
+    // Detect screen orientation and device type
     useEffect(() => {
         const checkOrientation = () => {
+            const mobile = window.innerWidth <= 768;
+            setIsMobile(mobile);
             setIsLandscape(window.innerWidth > window.innerHeight);
         };
 
         checkOrientation();
         window.addEventListener('resize', checkOrientation);
+        window.addEventListener('orientationchange', checkOrientation);
 
-        return () => window.removeEventListener('resize', checkOrientation);
+        return () => {
+            window.removeEventListener('resize', checkOrientation);
+            window.removeEventListener('orientationchange', checkOrientation);
+        };
     }, []);
 
     useEffect(() => {
@@ -94,7 +101,6 @@ export default function VideosPage() {
         videoRefs.current.forEach((video, index) => {
             if (video) {
                 if (index === currentIndex && isPlaying) {
-                    // Force landscape playback
                     video.play().catch((error) => {
                         console.log('Video play error:', error);
                     });
@@ -144,35 +150,64 @@ export default function VideosPage() {
         }
     };
 
-    // Force landscape styling
-    const landscapeStyles = isLandscape ? {
-        mainVideo: "aspect-[16/9] max-w-4xl", // Standard landscape ratio
-        thumbnailGrid: "grid-cols-4 gap-2",
-        container: "py-4"
-    } : {
-        mainVideo: "aspect-[9/16] max-w-md", // Portrait ratio for mobile
-        thumbnailGrid: "grid-cols-2 gap-3",
-        container: "py-8"
+    // Force landscape layout for all devices
+    const getVideoStyles = () => {
+        if (isMobile && isLandscape) {
+            // Mobile landscape - full screen landscape experience
+            return {
+                mainVideo: "aspect-video w-full h-[70vh] max-h-[70vh]",
+                thumbnailGrid: "grid-cols-4 gap-1",
+                container: "py-1 px-1",
+                showThumbnails: false,
+                showHeader: false,
+                compactUI: true
+            };
+        } else if (isMobile) {
+            // Mobile portrait - still use landscape aspect ratio
+            return {
+                mainVideo: "aspect-video w-full max-w-2xl",
+                thumbnailGrid: "grid-cols-2 gap-2",
+                container: "py-4 px-2",
+                showThumbnails: true,
+                showHeader: true,
+                compactUI: false
+            };
+        } else {
+            // Desktop - landscape optimized
+            return {
+                mainVideo: "aspect-video w-full max-w-4xl",
+                thumbnailGrid: "grid-cols-4 gap-3",
+                container: "py-8 px-4",
+                showThumbnails: true,
+                showHeader: true,
+                compactUI: false
+            };
+        }
     };
+
+    const styles = getVideoStyles();
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-900 via-fuchsia-800 to-pink-800 relative overflow-hidden">
             {/* Background pattern */}
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnptLTEyIDBjMy4zMTQgMCA2IDIuNjg2IDYgNnMtMi42ODYgNi02IDYtNi0yLjY4Ni02LTYgMi42ODYtNiA2LTZ6IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMC41IiBvcGFjaXR5PSIuMSIvPjwvZz48L3N2Zz4=')] opacity-20"></div>
 
-            <div className={`relative z-10 container mx-auto px-4 ${landscapeStyles.container}`}>
-                <div className="text-center mb-4">
-                    <h1 className="text-3xl md:text-5xl font-bold text-white mb-2 flex items-center justify-center gap-2 md:gap-4">
-                        <Heart className="w-8 h-8 md:w-12 md:h-12 fill-pink-300 text-pink-300 animate-pulse" />
-                        Memories
-                        <Heart className="w-8 h-8 md:w-12 md:h-12 fill-pink-300 text-pink-300 animate-pulse" />
-                    </h1>
-                    <p className="text-lg text-purple-200">Preety as Moon 🌙</p>
-                </div>
+            <div className={`relative z-10 container mx-auto ${styles.container}`}>
+                {/* Header */}
+                {styles.showHeader && (
+                    <div className="text-center mb-4">
+                        <h1 className="text-3xl md:text-5xl font-bold text-white mb-2 flex items-center justify-center gap-2 md:gap-4">
+                            <Heart className="w-8 h-8 md:w-12 md:h-12 fill-pink-300 text-pink-300 animate-pulse" />
+                            Memories
+                            <Heart className="w-8 h-8 md:w-12 md:h-12 fill-pink-300 text-pink-300 animate-pulse" />
+                        </h1>
+                        <p className="text-lg text-purple-200">Preety as Moon 🌙</p>
+                    </div>
+                )}
 
                 <div className="max-w-6xl mx-auto relative">
-                    {/* Main Video Player - Landscape Optimized */}
-                    <div className={`relative mx-auto ${landscapeStyles.mainVideo} rounded-2xl overflow-hidden shadow-2xl border-4 border-purple-300/30`}>
+                    {/* Main Video Player - Always Landscape */}
+                    <div className={`relative mx-auto ${styles.mainVideo} rounded-2xl overflow-hidden shadow-2xl border-4 border-purple-300/30 bg-black`}>
                         <div className="absolute inset-0 bg-gradient-to-t from-purple-950/80 via-transparent to-purple-950/40 z-10 pointer-events-none"></div>
 
                         <div className="relative w-full h-full">
@@ -202,27 +237,29 @@ export default function VideosPage() {
                         </div>
 
                         {/* Video Info Overlay */}
-                        <div className="absolute bottom-0 left-0 right-0 z-20 p-4 md:p-6 bg-gradient-to-t from-purple-950 to-transparent">
+                        <div className={`absolute bottom-0 left-0 right-0 z-20 ${styles.compactUI ? 'p-2' : 'p-4 md:p-6'} bg-gradient-to-t from-purple-950 to-transparent`}>
                             <div className="flex items-end justify-between">
                                 <div className="flex-1">
-                                    <h2 className="text-xl md:text-3xl font-bold text-white mb-1">
+                                    <h2 className={`font-bold text-white mb-1 ${styles.compactUI ? 'text-sm' : 'text-xl md:text-3xl'}`}>
                                         {videos[currentIndex].title}
                                     </h2>
-                                    <p className="text-sm md:text-lg text-purple-200">
-                                        {videos[currentIndex].description}
-                                    </p>
+                                    {!styles.compactUI && (
+                                        <p className="text-sm md:text-lg text-purple-200">
+                                            {videos[currentIndex].description}
+                                        </p>
+                                    )}
                                 </div>
                                 <Button
                                     variant="ghost"
-                                    size="icon"
+                                    size={styles.compactUI ? "default" : "icon"}
                                     onClick={() => toggleLike(videos[currentIndex].id)}
-                                    className={`ml-2 transition-all duration-300 hover:scale-110 ${liked.has(videos[currentIndex].id)
+                                    className={`transition-all duration-300 hover:scale-110 ${liked.has(videos[currentIndex].id)
                                         ? 'text-pink-400'
                                         : 'text-white'
                                         }`}
                                 >
                                     <Heart
-                                        className={`w-6 h-6 md:w-8 md:h-8 ${liked.has(videos[currentIndex].id) ? 'fill-current' : ''
+                                        className={`${styles.compactUI ? 'w-4 h-4' : 'w-6 h-6 md:w-8 md:h-8'} ${liked.has(videos[currentIndex].id) ? 'fill-current' : ''
                                             }`}
                                     />
                                 </Button>
@@ -232,80 +269,115 @@ export default function VideosPage() {
                         {/* Navigation Buttons */}
                         <Button
                             variant="ghost"
-                            size="icon"
+                            size={styles.compactUI ? "default" : "icon"}
                             onClick={handlePrev}
                             disabled={isTransitioning}
-                            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-purple-900/50 hover:bg-purple-800/80 text-white backdrop-blur-sm rounded-full w-10 h-10 md:w-14 md:h-14 transition-all duration-300 hover:scale-110 disabled:opacity-50"
+                            className={`absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-purple-900/50 hover:bg-purple-800/80 text-white backdrop-blur-sm rounded-full transition-all duration-300 hover:scale-110 disabled:opacity-50 ${styles.compactUI ? 'w-8 h-8' : 'w-10 h-10 md:w-14 md:h-14'
+                                }`}
                         >
-                            <ChevronLeft className="w-5 h-5 md:w-8 md:h-8" />
+                            <ChevronLeft className={styles.compactUI ? "w-4 h-4" : "w-5 h-5 md:w-8 md:h-8"} />
                         </Button>
 
                         <Button
                             variant="ghost"
-                            size="icon"
+                            size={styles.compactUI ? "default" : "icon"}
                             onClick={handleNext}
                             disabled={isTransitioning}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-purple-900/50 hover:bg-purple-800/80 text-white backdrop-blur-sm rounded-full w-10 h-10 md:w-14 md:h-14 transition-all duration-300 hover:scale-110 disabled:opacity-50"
+                            className={`absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-purple-900/50 hover:bg-purple-800/80 text-white backdrop-blur-sm rounded-full transition-all duration-300 hover:scale-110 disabled:opacity-50 ${styles.compactUI ? 'w-8 h-8' : 'w-10 h-10 md:w-14 md:h-14'
+                                }`}
                         >
-                            <ChevronRight className="w-5 h-5 md:w-8 md:h-8" />
+                            <ChevronRight className={styles.compactUI ? "w-4 h-4" : "w-5 h-5 md:w-8 md:h-8"} />
                         </Button>
 
+                        {/* Play/Pause Button */}
                         <Button
                             variant="ghost"
-                            size="icon"
+                            size={styles.compactUI ? "default" : "icon"}
                             onClick={() => setIsPlaying(!isPlaying)}
-                            className="absolute top-2 right-2 z-20 bg-purple-900/50 hover:bg-purple-800/80 text-white backdrop-blur-sm rounded-full w-8 h-8 md:w-12 md:h-12 transition-all duration-300 hover:scale-110"
+                            className={`absolute top-2 right-2 z-20 bg-purple-900/50 hover:bg-purple-800/80 text-white backdrop-blur-sm rounded-full transition-all duration-300 hover:scale-110 ${styles.compactUI ? 'w-6 h-6' : 'w-8 h-8 md:w-12 md:h-12'
+                                }`}
                         >
                             {isPlaying ? (
-                                <Pause className="w-4 h-4 md:w-6 md:h-6" />
+                                <Pause className={styles.compactUI ? "w-3 h-3" : "w-4 h-4 md:w-6 md:h-6"} />
                             ) : (
-                                <Play className="w-4 h-4 md:w-6 md:h-6" />
+                                <Play className={styles.compactUI ? "w-3 h-3" : "w-4 h-4 md:w-6 md:h-6"} />
                             )}
                         </Button>
+
+                        {/* Progress Indicator - Top Bar */}
+                        <div className="absolute top-0 left-0 right-0 z-20 px-2 pt-2">
+                            <div className="flex gap-1">
+                                {videos.map((_, index) => (
+                                    <div
+                                        key={index}
+                                        className={`h-1 flex-1 rounded-full transition-all duration-500 ${index === currentIndex
+                                            ? 'bg-pink-400'
+                                            : 'bg-purple-300/30'
+                                            }`}
+                                    />
+                                ))}
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Progress Dots */}
-                    <div className="flex justify-center mt-4 gap-2">
-                        {videos.map((_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => handleVideoClick(index)}
-                                disabled={isTransitioning}
-                                className={`transition-all duration-300 rounded-full ${index === currentIndex
-                                    ? 'w-8 bg-pink-400 shadow-lg shadow-pink-400/50'
-                                    : 'w-2 bg-purple-300/50 hover:bg-purple-300'
-                                    } h-2 disabled:opacity-50`}
-                            />
-                        ))}
-                    </div>
+                    {/* Progress Dots - Hidden in compact mode */}
+                    {!styles.compactUI && (
+                        <div className="flex justify-center mt-4 gap-2">
+                            {videos.map((_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => handleVideoClick(index)}
+                                    disabled={isTransitioning}
+                                    className={`transition-all duration-300 rounded-full ${index === currentIndex
+                                        ? 'w-8 bg-pink-400 shadow-lg shadow-pink-400/50'
+                                        : 'w-2 bg-purple-300/50 hover:bg-purple-300'
+                                        } h-2 disabled:opacity-50`}
+                                />
+                            ))}
+                        </div>
+                    )}
 
                     {/* Thumbnail Grid */}
-                    <div className={`mt-6 grid ${landscapeStyles.thumbnailGrid}`}>
-                        {videos.map((video, index) => (
-                            <button
-                                key={video.id}
-                                onClick={() => handleVideoClick(index)}
-                                disabled={isTransitioning}
-                                className={`relative group rounded-lg overflow-hidden transition-all duration-300 aspect-video ${index === currentIndex
-                                    ? 'ring-2 ring-pink-400 shadow-lg shadow-pink-400/30 scale-105'
-                                    : 'hover:scale-105 hover:shadow-lg opacity-70 hover:opacity-100'
-                                    } disabled:opacity-50`}
-                            >
-                                <video
-                                    className="w-full h-full object-cover"
-                                    muted
-                                    playsInline
+                    {styles.showThumbnails && (
+                        <div className={`mt-6 grid ${styles.thumbnailGrid}`}>
+                            {videos.map((video, index) => (
+                                <button
+                                    key={video.id}
+                                    onClick={() => handleVideoClick(index)}
+                                    disabled={isTransitioning}
+                                    className={`relative group rounded-lg overflow-hidden transition-all duration-300 aspect-video ${index === currentIndex
+                                        ? 'ring-2 ring-pink-400 shadow-lg shadow-pink-400/30 scale-105'
+                                        : 'hover:scale-105 hover:shadow-lg opacity-70 hover:opacity-100'
+                                        } disabled:opacity-50`}
                                 >
-                                    <source src={video.url} type="video/mp4" />
-                                </video>
-                                <div className="absolute inset-0 bg-gradient-to-t from-purple-950/60 to-transparent flex items-end p-2">
-                                    <p className="text-white text-xs font-semibold truncate">
-                                        {video.title}
-                                    </p>
-                                </div>
-                            </button>
-                        ))}
-                    </div>
+                                    <video
+                                        className="w-full h-full object-cover"
+                                        muted
+                                        playsInline
+                                    >
+                                        <source src={video.url} type="video/mp4" />
+                                    </video>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-purple-950/60 to-transparent flex items-end p-2">
+                                        <p className="text-white text-xs font-semibold truncate">
+                                            {video.title}
+                                        </p>
+                                    </div>
+                                    {index === currentIndex && (
+                                        <div className="absolute inset-0 border-2 border-pink-400 rounded-lg pointer-events-none"></div>
+                                    )}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Mobile Landscape Controls Info */}
+                    {styles.compactUI && (
+                        <div className="text-center mt-2">
+                            <p className="text-purple-200 text-xs">
+                                Swipe or use buttons to navigate
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
 
