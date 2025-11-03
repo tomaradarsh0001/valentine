@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Heart, Play, Pause } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Heart, Play, Pause, Sparkles } from 'lucide-react';
 
 // Create a simple Button component since shadcn/ui isn't working
 const Button = ({
@@ -55,10 +55,42 @@ const videos = [
     {
         id: 4,
         url: 'images/videos/4.mp4',
-        title: 'Eternal Love',
-        description: 'A timeless celebration of togetherness'
+        title: 'Whispering Hearts',
+        description: 'Where every heartbeat tells our story'
+    },
+    {
+        id: 5,
+        url: 'images/videos/5.mp4',
+        title: 'Dancing in Moonlight',
+        description: 'Moving to the rhythm of our love'
+    },
+    {
+        id: 6,
+        url: 'images/videos/6.mp4',
+        title: 'Endless Embrace',
+        description: 'Holding onto moments that last forever'
+    },
+    {
+        id: 7,
+        url: 'images/videos/7.mp4',
+        title: 'Stolen Glances',
+        description: 'Speaking volumes without saying a word'
+    },
+    {
+        id: 8,
+        url: 'images/videos/8.mp4',
+        title: 'Promise of Tomorrow',
+        description: 'Building dreams together, one day at a time'
     }
 ];
+
+// Sparkle component for animated sparkles
+const Sparkle = ({ style }: { style: React.CSSProperties }) => (
+    <div
+        className="absolute w-2 h-2 bg-white rounded-full animate-sparkle opacity-0"
+        style={style}
+    />
+);
 
 export default function VideosPage() {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -68,6 +100,33 @@ export default function VideosPage() {
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [isLandscape, setIsLandscape] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const [sparkles, setSparkles] = useState<Array<{ id: number; style: React.CSSProperties }>>([]);
+
+    // Generate sparkles
+    useEffect(() => {
+        const generateSparkles = () => {
+            const newSparkles = [];
+            const sparkleCount = isMobile ? 15 : 30;
+
+            for (let i = 0; i < sparkleCount; i++) {
+                newSparkles.push({
+                    id: i,
+                    style: {
+                        left: `${Math.random() * 100}%`,
+                        top: `${Math.random() * 100}%`,
+                        animationDelay: `${Math.random() * 3}s`,
+                        animationDuration: `${2 + Math.random() * 2}s`,
+                    }
+                });
+            }
+            setSparkles(newSparkles);
+        };
+
+        generateSparkles();
+        const interval = setInterval(generateSparkles, 5000);
+
+        return () => clearInterval(interval);
+    }, [isMobile]);
 
     // Detect screen orientation and device type
     useEffect(() => {
@@ -189,26 +248,60 @@ export default function VideosPage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-900 via-fuchsia-800 to-pink-800 relative overflow-hidden">
-            {/* Background pattern */}
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnptLTEyIDBjMy4zMTQgMCA2IDIuNjg2IDYgNnMtMi42ODYgNi02IDYtNi0yLjY4Ni02LTYgMi42ODYtNiA2LTZ6IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMC41IiBvcGFjaXR5PSIuMSIvPjwvZz48L3N2Zz4=')] opacity-20"></div>
+            {/* Animated Gradient Background */}
+            <div className="absolute inset-0 bg-animate"></div>
+
+            {/* Animated Sparkles */}
+            {sparkles.map((sparkle) => (
+                <Sparkle key={sparkle.id} style={sparkle.style} />
+            ))}
+
+            {/* Floating Hearts Animation */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                {[...Array(8)].map((_, i) => (
+                    <div
+                        key={i}
+                        className="absolute text-pink-300/20 animate-float"
+                        style={{
+                            left: `${20 + i * 10}%`,
+                            animationDelay: `${i * 0.5}s`,
+                            animationDuration: `${15 + i * 2}s`,
+                        }}
+                    >
+                        <Heart className="w-6 h-6 md:w-8 md:h-8" fill="currentColor" />
+                    </div>
+                ))}
+            </div>
+
+            {/* Background pattern with animation */}
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnptLTEyIDBjMy4zMTQgMCA2IDIuNjg2IDYgNnMtMi42ODYgNi02IDYtNi0yLjY4Ni02LTYgMi42ODYtNiA2LTZ6IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMC41IiBvcGFjaXR5PSIuMSIvPjwvZz48L3N2Zz4=')] opacity-20 animate-pulse-slow"></div>
 
             <div className={`relative z-10 container mx-auto ${styles.container}`}>
                 {/* Header */}
                 {styles.showHeader && (
-                    <div className="text-center mb-4">
-                        <h1 className="text-3xl md:text-5xl font-bold text-white mb-2 flex items-center justify-center gap-2 md:gap-4">
+                    <div className="text-center mb-4 relative">
+                        <div className="absolute -top-2 -left-2 animate-ping">
+                            <Sparkles className="w-4 h-4 text-pink-300" />
+                        </div>
+                        <div className="absolute -top-2 -right-2 animate-ping" style={{ animationDelay: '1s' }}>
+                            <Sparkles className="w-4 h-4 text-pink-300" />
+                        </div>
+                        <h1 className="text-3xl md:text-5xl font-bold text-white mb-2 flex items-center justify-center gap-2 md:gap-4 relative">
                             <Heart className="w-8 h-8 md:w-12 md:h-12 fill-pink-300 text-pink-300 animate-pulse" />
                             Memories
                             <Heart className="w-8 h-8 md:w-12 md:h-12 fill-pink-300 text-pink-300 animate-pulse" />
                         </h1>
-                        <p className="text-lg text-purple-200">Preety as Moon 🌙</p>
+                        <p className="text-lg text-purple-200 animate-pulse">Preety as Moon 🌙</p>
                     </div>
                 )}
 
                 <div className="max-w-6xl mx-auto relative">
                     {/* Main Video Player - Always Landscape */}
-                    <div className={`relative mx-auto ${styles.mainVideo} rounded-2xl overflow-hidden shadow-2xl border-4 border-purple-300/30 bg-black`}>
+                    <div className={`relative mx-auto ${styles.mainVideo} rounded-2xl overflow-hidden shadow-2xl border-4 border-purple-300/30 bg-black transform transition-all duration-500 hover:shadow-purple-500/30 hover:border-purple-300/50`}>
                         <div className="absolute inset-0 bg-gradient-to-t from-purple-950/80 via-transparent to-purple-950/40 z-10 pointer-events-none"></div>
+
+                        {/* Glow effect */}
+                        <div className="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-2xl blur opacity-20 animate-glow"></div>
 
                         <div className="relative w-full h-full">
                             {videos.map((video, index) => (
@@ -253,13 +346,13 @@ export default function VideosPage() {
                                     variant="ghost"
                                     size={styles.compactUI ? "default" : "icon"}
                                     onClick={() => toggleLike(videos[currentIndex].id)}
-                                    className={`transition-all duration-300 hover:scale-110 ${liked.has(videos[currentIndex].id)
+                                    className={`transition-all duration-300 hover:scale-110 animate-pulse ${liked.has(videos[currentIndex].id)
                                         ? 'text-pink-400'
                                         : 'text-white'
                                         }`}
                                 >
                                     <Heart
-                                        className={`${styles.compactUI ? 'w-4 h-4' : 'w-6 h-6 md:w-8 md:h-8'} ${liked.has(videos[currentIndex].id) ? 'fill-current' : ''
+                                        className={`${styles.compactUI ? 'w-4 h-4' : 'w-6 h-6 md:w-8 md:h-8'} ${liked.has(videos[currentIndex].id) ? 'fill-current animate-bounce' : ''
                                             }`}
                                     />
                                 </Button>
@@ -311,7 +404,7 @@ export default function VideosPage() {
                                     <div
                                         key={index}
                                         className={`h-1 flex-1 rounded-full transition-all duration-500 ${index === currentIndex
-                                            ? 'bg-pink-400'
+                                            ? 'bg-pink-400 animate-pulse'
                                             : 'bg-purple-300/30'
                                             }`}
                                     />
@@ -328,8 +421,8 @@ export default function VideosPage() {
                                     key={index}
                                     onClick={() => handleVideoClick(index)}
                                     disabled={isTransitioning}
-                                    className={`transition-all duration-300 rounded-full ${index === currentIndex
-                                        ? 'w-8 bg-pink-400 shadow-lg shadow-pink-400/50'
+                                    className={`transition-all duration-300 rounded-full hover:scale-125 ${index === currentIndex
+                                        ? 'w-8 bg-pink-400 shadow-lg shadow-pink-400/50 animate-pulse'
                                         : 'w-2 bg-purple-300/50 hover:bg-purple-300'
                                         } h-2 disabled:opacity-50`}
                                 />
@@ -345,25 +438,28 @@ export default function VideosPage() {
                                     key={video.id}
                                     onClick={() => handleVideoClick(index)}
                                     disabled={isTransitioning}
-                                    className={`relative group rounded-lg overflow-hidden transition-all duration-300 aspect-video ${index === currentIndex
-                                        ? 'ring-2 ring-pink-400 shadow-lg shadow-pink-400/30 scale-105'
-                                        : 'hover:scale-105 hover:shadow-lg opacity-70 hover:opacity-100'
+                                    className={`relative group rounded-lg overflow-hidden transition-all duration-300 aspect-video transform hover:scale-105 ${index === currentIndex
+                                        ? 'ring-2 ring-pink-400 shadow-lg shadow-pink-400/30 scale-105 animate-pulse'
+                                        : 'hover:shadow-lg opacity-70 hover:opacity-100'
                                         } disabled:opacity-50`}
                                 >
+                                    {/* Thumbnail glow effect */}
+                                    <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-0 group-hover:opacity-30 transition duration-300"></div>
+
                                     <video
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-full object-cover relative z-10"
                                         muted
                                         playsInline
                                     >
                                         <source src={video.url} type="video/mp4" />
                                     </video>
-                                    <div className="absolute inset-0 bg-gradient-to-t from-purple-950/60 to-transparent flex items-end p-2">
+                                    <div className="absolute inset-0 bg-gradient-to-t from-purple-950/60 to-transparent flex items-end p-2 z-20">
                                         <p className="text-white text-xs font-semibold truncate">
                                             {video.title}
                                         </p>
                                     </div>
                                     {index === currentIndex && (
-                                        <div className="absolute inset-0 border-2 border-pink-400 rounded-lg pointer-events-none"></div>
+                                        <div className="absolute inset-0 border-2 border-pink-400 rounded-lg pointer-events-none z-30 animate-pulse"></div>
                                     )}
                                 </button>
                             ))}
@@ -373,7 +469,7 @@ export default function VideosPage() {
                     {/* Mobile Landscape Controls Info */}
                     {styles.compactUI && (
                         <div className="text-center mt-2">
-                            <p className="text-purple-200 text-xs">
+                            <p className="text-purple-200 text-xs animate-pulse">
                                 Swipe or use buttons to navigate
                             </p>
                         </div>
@@ -382,6 +478,55 @@ export default function VideosPage() {
             </div>
 
             <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-purple-950 to-transparent pointer-events-none"></div>
+
+            {/* Add custom animations to global styles */}
+            <style jsx global>{`
+                @keyframes gradient {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                }
+                
+                @keyframes sparkle {
+                    0% { opacity: 0; transform: scale(0) rotate(0deg); }
+                    50% { opacity: 1; transform: scale(1) rotate(180deg); }
+                    100% { opacity: 0; transform: scale(0) rotate(360deg); }
+                }
+                
+                @keyframes float {
+                    0% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+                    10% { opacity: 1; }
+                    90% { opacity: 1; }
+                    100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+                }
+                
+                @keyframes glow {
+                    0%, 100% { opacity: 0.2; }
+                    50% { opacity: 0.4; }
+                }
+                
+                .bg-animate {
+                    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+                    background-size: 400% 400%;
+                    animation: gradient 15s ease infinite;
+                }
+                
+                .animate-sparkle {
+                    animation: sparkle 3s ease-in-out infinite;
+                }
+                
+                .animate-float {
+                    animation: float 20s linear infinite;
+                }
+                
+                .animate-glow {
+                    animation: glow 2s ease-in-out infinite;
+                }
+                
+                .animate-pulse-slow {
+                    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+                }
+            `}</style>
         </div>
     );
 }
